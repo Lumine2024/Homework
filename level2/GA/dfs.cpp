@@ -59,6 +59,6 @@ int main() {
     };
     vector<int> personpos = { 8, 0 };
     vector<vector<bool>> visited(11, vector<bool>(11, false));
-	dfs(maze, personpos, visited);
+    dfs(maze, personpos, visited);
     return 0;
 }
