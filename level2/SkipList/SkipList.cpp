@@ -2,6 +2,7 @@
 #include <vector>
 #include <set>
 #include <new>
+#include <ctime>
 using namespace std;
 //#define _DBG
 #ifdef _DBG
@@ -9,18 +10,18 @@ using namespace std;
 #else
 #define PRIVATE private
 #endif
-template<class _Ty, class _Pr = less<_Ty>, class _Eq = equal_to<_Ty>>
-class skiplist {
+template<class _Ty, class _Pr = less<_Ty>, class _Eq = equal_to<_Ty>> class skiplist {
 public:
     using value_type = _Ty;
-    using pointer = _Ty*;
-    using reference = _Ty&;
-    using const_reference = const _Ty&;
+    using pointer = _Ty *;
+	using const_pointer = const _Ty *;
+    using reference = _Ty &;
+    using const_reference = const _Ty &;
     using size_type = size_t;
 PRIVATE:
     struct _Node {
         value_type _Myval;
-        vector<_Node*> _Forward;
+        vector<_Node *> _Forward;
         _Node(int _Val, int _Level) : _Myval(_Val), _Forward(_Level + 1, nullptr) {}
         ~_Node() = default;
     };
@@ -37,37 +38,36 @@ PRIVATE:
     };
 public:
     skiplist() : _Nodecnt(0), _Level(0), _Dummy(new _Node(0, max_level)) {}
-    skiplist(const initializer_list<value_type>& _Ilist)
+    skiplist(const initializer_list<value_type> &_Ilist)
         : _Nodecnt(_Ilist.size()), _Dummy(new _Node(0, max_level)) {
-        for (const auto& elem : _Ilist) {
+        for(const auto &elem : _Ilist) {
             insert(elem);
         }
     }
-    skiplist(const skiplist<_Ty, _Pr, _Eq>& other) : _Nodecnt(other._Nodecnt),
-        _Dummy(new _Node(0, max_level)), _Controller(other._Controller),
-        _Compare(other._Compare), _Equal(other._Equal) {
-        _Node* curr = other._Dummy->_Forward[0];
-        while (curr) {
+    skiplist(const skiplist<_Ty, _Pr, _Eq> &other) : _Nodecnt(other._Nodecnt),
+        _Dummy(new _Node(0, max_level)) {
+        _Node *curr = other._Dummy->_Forward[0];
+        while(curr) {
             insert(curr->_Myval);
             curr = curr->_Forward[0];
         }
     }
     ~skiplist() {
-        _Node* curr = _Dummy;
-        while (curr) {
-            _Node* tmp = curr;
+        _Node *curr = _Dummy;
+        while(curr) {
+            _Node *tmp = curr;
             curr = curr->_Forward[0];
             delete tmp;
         }
     }
     bool search(const_reference _Val) const {
-        _Node* curr = _Dummy;
-        for (int i = static_cast<int>(_Level); i >= 0; --i) {
-            while (curr->_Forward[i]) {
-                if (_Equal(_Val, curr->_Forward[i]->_Myval)) {
+        _Node *curr = _Dummy;
+        for(int i = static_cast<int>(_Level); i >= 0; --i) {
+            while(curr->_Forward[i]) {
+                if(_Equal(_Val, curr->_Forward[i]->_Myval)) {
                     return true;
                 }
-                else if (_Compare(curr->_Forward[i]->_Myval, _Val)) {
+                else if(_Compare(curr->_Forward[i]->_Myval, _Val)) {
                     curr = curr->_Forward[i];
                 }
                 else {
@@ -78,11 +78,11 @@ public:
         return false;
     }
     void insert(const_reference _Val) {
-        vector<_Node*> update(max_level + 1, nullptr);
-        _Node* curr = _Dummy;
-        for (int i = static_cast<int>(_Level); i >= 0; --i) {
-            while (curr->_Forward[i]) {
-                if (_Compare(curr->_Forward[i]->_Myval, _Val)) {
+        vector<_Node *> update(max_level + 1, nullptr);
+        _Node *curr = _Dummy;
+        for(int i = static_cast<int>(_Level); i >= 0; --i) {
+            while(curr->_Forward[i]) {
+                if(_Compare(curr->_Forward[i]->_Myval, _Val)) {
                     curr = curr->_Forward[i];
                 }
                 else {
@@ -92,26 +92,26 @@ public:
             update[i] = curr;
         }
         size_t level = _Get_random_level();
-        if (level > _Level) {
+        if(level > _Level) {
             level = _Level + 1;
             update[level] = _Dummy;
             _Level = level;
         }
-        _Node* newnode = new _Node(_Val, level);
-        for (size_t i = 0; i <= level; ++i) {
+        _Node *newnode = new _Node(_Val, level);
+        for(size_t i = 0; i <= level; ++i) {
             newnode->_Forward[i] = update[i]->_Forward[i];
             update[i]->_Forward[i] = newnode;
         }
         ++_Nodecnt;
     }
     bool erase(const_reference _Val) {
-        _Node* curr = _Dummy;
-        for (int i = static_cast<int>(_Level); i >= 0; --i) {
-            while (curr->_Forward[i]) {
-                if (_Equal(_Val, curr->_Forward[i]->_Myval)) {
-                    _Node* to_erase = curr->_Forward[i];
-                    for (int j = i; j >= 0; --j) {
-                        while (!_Equal(curr->_Forward[j]->_Myval, _Val)) {
+        _Node *curr = _Dummy;
+        for(int i = static_cast<int>(_Level); i >= 0; --i) {
+            while(curr->_Forward[i]) {
+                if(_Equal(_Val, curr->_Forward[i]->_Myval)) {
+                    _Node *to_erase = curr->_Forward[i];
+                    for(int j = i; j >= 0; --j) {
+                        while(!_Equal(curr->_Forward[j]->_Myval, _Val)) {
                             curr = curr->_Forward[j];
                         }
                         curr->_Forward[j] = to_erase->_Forward[j];
@@ -120,7 +120,7 @@ public:
                     --_Nodecnt;
                     return true;
                 }
-                else if (_Compare(curr->_Forward[i]->_Myval, _Val)) {
+                else if(_Compare(curr->_Forward[i]->_Myval, _Val)) {
                     curr = curr->_Forward[i];
                 }
                 else {
@@ -137,10 +137,10 @@ public:
         return _Level;
     }
     void display() const {
-        for (int i = static_cast<int>(_Level); i >= 0; --i) {
+        for(int i = static_cast<int>(_Level); i >= 0; --i) {
             cout << "level " << i << ": ";
-            _Node* node = _Dummy->_Forward[i];
-            while (node != nullptr) {
+            _Node *node = _Dummy->_Forward[i];
+            while(node != nullptr) {
                 cout << node->_Myval << " ";
                 node = node->_Forward[i];
             }
@@ -148,15 +148,52 @@ public:
         }
         cout << endl;
     }
+    struct _Iterator {
+        using iterator_category = std::forward_iterator_tag;
+        using value_type = const _Ty;
+        using difference_type = std::ptrdiff_t;
+        using pointer = const _Ty *;
+        using reference = const _Ty &;
+        _Iterator(_Node *_Begin) : _Myptr(_Begin) {}
+        reference operator*() const {
+            return _Myptr->_Myval;
+        }
+        pointer operator->() const {
+            return &_Myptr->_Myval;
+        }
+        _Iterator &operator++() {
+            _Myptr = _Myptr->_Forward[0];
+            return *this;
+        }
+        _Iterator operator++(int) {
+            _Iterator tmp = *this;
+            _Myptr = _Myptr->_Forward[0];
+            return tmp;
+        }
+        bool operator==(const _Iterator &_Right) const {
+            return _Myptr == _Right._Myptr;
+        }
+        bool operator!=(const _Iterator &_Right) const {
+            return _Myptr != _Right._Myptr;
+        }
+    private:
+        _Node *_Myptr;
+    };
+    _Iterator begin() const {
+        return _Iterator(_Dummy->_Forward[0]);
+    }
+    _Iterator end() const {
+        return _Iterator(nullptr);
+    }
 PRIVATE:
     size_t _Get_random_level() {
-        for (size_t ret = 0; ret < max_level; ++ret) {
-            if (!_Controller._Getbool()) return ret;
+        for(size_t ret = 0; ret < max_level; ++ret) {
+            if(!_Controller._Getbool()) return ret;
         }
         return max_level - 1;
     }
 PRIVATE:
-    _Node* _Dummy;
+    _Node *_Dummy;
     size_type _Level, _Nodecnt;
     _Gen_bool _Controller;
     _Pr _Compare;
@@ -165,13 +202,19 @@ public:
     static constexpr size_type max_level = 32ULL;
 };
 int main() {
-    skiplist<int> lst = { 2,3,4,5,6 };
-    lst.display();
-    lst.insert(5);
-    lst.display();
-    lst.erase(3);
-    lst.display();
-    skiplist<int> lst2 = lst;
-    lst2.display();
+	cin.tie(nullptr)->sync_with_stdio(false);
+    skiplist<int> lst;
+    int n = 5000000;
+    while(n--) {
+        lst.insert(rand());
+    }
+    vector<int> vec(lst.begin(), lst.end());
+    int k = rand();
+    time_t t1 = clock();
+    cout << (lst.search(k) ? "true" : "false") << endl;
+    time_t t2 = clock();
+    cout << (find(vec.begin(), vec.end(), k) != vec.end() ? "true" : "false") << endl;
+    time_t dt1 = t2 - t1, dt2 = clock() - t2;
+	cout << "dt1 = " << dt1 << "ms, dt2 = " << dt2 << "ms" << endl; // 唉，常数，dt1 = 2ms, dt2 = 1ms
     return 0;
 }
