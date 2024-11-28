@@ -39,7 +39,7 @@ PRIVATE:
 public:
     skiplist() : _Nodecnt(0), _Level(0), _Dummy(new _Node(0, max_level)) {}
     skiplist(const initializer_list<value_type> &_Ilist)
-        : _Nodecnt(_Ilist.size()), _Dummy(new _Node(0, max_level)) {
+        : _Nodecnt(0), _Dummy(new _Node(0, max_level)) {
         for(const auto &elem : _Ilist) {
             insert(elem);
         }
