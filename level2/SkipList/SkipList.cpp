@@ -44,7 +44,7 @@ public:
             insert(elem);
         }
     }
-    skiplist(const skiplist<_Ty, _Pr, _Eq> &other) : _Nodecnt(other._Nodecnt),
+    skiplist(const skiplist<_Ty, _Pr, _Eq> &other) : _Nodecnt(0),
         _Dummy(new _Node(0, max_level)) {
         _Node *curr = other._Dummy->_Forward[0];
         while(curr) {
