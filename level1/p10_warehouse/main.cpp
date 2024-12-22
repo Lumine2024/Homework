@@ -21,7 +21,7 @@ public:
 vector<goods> vgoods;
 void load() {
 	fstream file;
-	file.open("D:\\Homework\\level1\\p10_warehouse\\goods.txt", ios::in);
+	file.open("goods.txt", ios::in);
 	if(file.is_open()) {
 		size_t i, nu;
 		string n;
@@ -37,7 +37,7 @@ void load() {
 }
 void save() {
 	fstream file;
-	file.open("D:\\Homework\\level1\\p10_warehouse\\goods.txt", ios::out);
+	file.open("goods.txt", ios::out);
 	if(file.is_open()) {
 		for(size_t i = 0; i < vgoods.size(); i++) {
 			file << vgoods[i].id << endl;
