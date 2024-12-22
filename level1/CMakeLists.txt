@@ -13,7 +13,7 @@ add_executable(p05_encrypt_decrypt p05_encrypt_decrypt/main.c)
 add_executable(p06_hanoi p06_hanoi/main.c)
 
 add_executable(p07_maze p07_maze/main.c)
-# 由于使用了EasyX，搭载的是WinMain作为主函数（而不是main），故project8 push_boxes无法在cmake中启动
+# 由于使用了EasyX，以WinMain作为主函数（而不是main），故project8 push_boxes无法在cmake中启动
 # add_executable(p08_push_boxes 
 #    p08_push_boxes/main.cpp
 #    p08_push_boxes/Graphic_Logic.cpp
