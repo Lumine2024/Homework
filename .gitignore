@@ -3,6 +3,7 @@
 .git/
 .vs/
 .out/
+out/
 level1/p08_push_boxes/.vs
 level1/p08_push_boxes/p08_push_boxes/x64
 level1/p08_push_boxes/x64
