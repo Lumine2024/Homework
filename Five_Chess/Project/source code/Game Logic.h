@@ -4,8 +4,9 @@
 #include <algorithm>
 #include <utility>
 #include <vector>
-#pragma warning(disable: 5030) // ÎŞ·¨Ê¶±ğÊôĞÔ£ºmsvc::always_inline
-// Îå×ÓÆåÆåÅÌÀà
+#pragma warning(push)
+#pragma warning(disable: 5030) // æ— æ³•è¯†åˆ«å±æ€§ï¼šmsvc::always_inline
+// äº”å­æ£‹æ£‹ç›˜ç±»
 class Five_Chess {
 public:
 	Five_Chess() :
@@ -29,40 +30,41 @@ public:
 		}
 		return *this;
 	}
-	// Âä×Ó
+	// è½å­
 	RELEASE_INLINE void								putchess	(int x, int y);
-	// ÒÆ³ıÆå×Ó
+	// ç§»é™¤æ£‹å­
 	RELEASE_INLINE void								rmchess		(int x, int y) noexcept;
-	// ÅĞ¶¨ÓÎÏ·ÊÇ·ñ½áÊø£¬ch´«ÈëÒÔ»ñÈ¡Ê¤ÀûÍæ¼Ò
+	// åˆ¤å®šæ¸¸æˆæ˜¯å¦ç»“æŸï¼Œchä¼ å…¥ä»¥è·å–èƒœåˆ©ç©å®¶
 	RELEASE_INLINE bool								has_ended	(char &ch) const noexcept;
-	// Éú³ÉËùÓĞ¿ÉÄÜµÄÂä×Ó´¦
+	// ç”Ÿæˆæ‰€æœ‰å¯èƒ½çš„è½å­å¤„
 	RELEASE_INLINE std::vector<std::pair<int, int>> generate_possible_moves() const noexcept;
-	// ·µ»ØÕıÔÚÍæµÄÍæ¼Ò£¬trueÎª°××Ó
+	// è¿”å›æ­£åœ¨ç©çš„ç©å®¶ï¼Œtrueä¸ºç™½å­
 	RELEASE_INLINE bool								player_playing() const noexcept {
 		return white_player_playing;
 	}
-	// ÆåÅÌ
+	// æ£‹ç›˜
 	std::vector<std::vector<char>>	chessboard;
-	// ÊÇ·ñÎª°××ÓÕıÔÚ²Ù×÷
+	// æ˜¯å¦ä¸ºç™½å­æ­£åœ¨æ“ä½œ
 	bool							white_player_playing;
-	// ×îºóÒ»´ÎÂä×ÓµÄÎ»ÖÃ
+	// æœ€åä¸€æ¬¡è½å­çš„ä½ç½®
 	int								lastx, lasty;
-	// ÉÏÒ»´ÎÂä×ÓµÄÎ»ÖÃ
+	// ä¸Šä¸€æ¬¡è½å­çš„ä½ç½®
 	int								prev_lastx, prev_lasty;
 };
 
-// ½øĞĞÓÎÏ·µÄº¯Êı
-// µÚËÄ¸ö²ÎÊıÎªÂä×ÓºóÊÇ·ñµÈ´ı500ms£¬ÕâÊÇÎªÁË·ÀÖ¹AI×ÔÎÒ¶ÔŞÄÊ±Âä×Ó¹ı¿ìÎŞ·¨¿´Çå
+// è¿›è¡Œæ¸¸æˆçš„å‡½æ•°
+// ç¬¬å››ä¸ªå‚æ•°ä¸ºè½å­åæ˜¯å¦ç­‰å¾…500msï¼Œè¿™æ˜¯ä¸ºäº†é˜²æ­¢AIè‡ªæˆ‘å¯¹å¼ˆæ—¶è½å­è¿‡å¿«æ— æ³•çœ‹æ¸…
 RELEASE_INLINE void playgame(Five_Chess &fc,
 	Player_Base *player1, Player_Base *player2,
 	bool dosleep = false) noexcept;
 
-// ÈËÀà²Ù×÷
+// äººç±»æ“ä½œ
 class Human : public Player_Base {
 public:
 	Human() noexcept = default;
-	// ÈËÀàµÄÅĞ¶Ï¿ÉÓÉÈËÀà×ÔĞĞÍê³É£¬¹ÊÌá¹©¿ÕÊµÏÖ
+	// äººç±»çš„åˆ¤æ–­å¯ç”±äººç±»è‡ªè¡Œå®Œæˆï¼Œæ•…æä¾›ç©ºå®ç°
 	RELEASE_INLINE void judge(const Five_Chess &fc) noexcept override {}
-	// »ñÈ¡Êó±êĞÅÏ¢£¬µã»÷Ê±Âä×Ó
+	// è·å–é¼ æ ‡ä¿¡æ¯ï¼Œç‚¹å‡»æ—¶è½å­
 	RELEASE_INLINE void put(Five_Chess &fc)			noexcept override;
 };
+#pragma warning(pop)
