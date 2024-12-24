@@ -3,49 +3,50 @@
 #ifdef _DEBUG
 #include <iostream>
 #include <iomanip>
-// ·Ö¸ô·û
+// åˆ†éš”ç¬¦
 constexpr char separator[] = "--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------\n\n";
 #endif
 using namespace std;
-#pragma warning(disable: 4244) // double×ªscore_t¿ÉÄÜ»áÓĞ¾«¶ÈËğÊ§£¬µ«ÊÇÕâÀï²»ĞèÒª¾«¶È
+#pragma warning(push)
+#pragma warning(disable: 4244) // doubleè½¬score_tå¯èƒ½ä¼šæœ‰ç²¾åº¦æŸå¤±ï¼Œä½†æ˜¯è¿™é‡Œä¸éœ€è¦ç²¾åº¦
 
-constexpr Search_AI::score_t score_ref[5] = { 1, 100, 100000, 100000000ULL, 10000000000000ULL }; // ÆåÅÌÀàĞÍ¶ÔÓ¦µÄµÃ·Ö¹ÀÖµÊı×é
-constexpr int directions[4][2] = { {1, 0}, {0, 1}, {1, 1}, {1, -1} }; // ·½ÏòÊı×é
+constexpr Search_AI::score_t score_ref[5] = { 1, 100, 100000, 100000000ULL, 10000000000000ULL }; // æ£‹ç›˜ç±»å‹å¯¹åº”çš„å¾—åˆ†ä¼°å€¼æ•°ç»„
+constexpr int directions[4][2] = { {1, 0}, {0, 1}, {1, 1}, {1, -1} }; // æ–¹å‘æ•°ç»„
 void Search_AI::judge(const Five_Chess &fc) noexcept {
-	judgement = vector<vector<score_t>>(15, vector<score_t>(15, 0)); // ³õÊ¼»¯ÅĞ¶Ï
-	max_of_judgement = 0; // ³õÊ¼»¯×î´óÖµ
-	auto spaces = fc.generate_possible_moves(); // »ñÈ¡ËùÓĞµÄ¿Õ¸ñ
-	for(auto &[x, y] : spaces) { // ¶ÔÃ¿Ò»¸ö¿Õ¸ñµÄµÃ·Ö½øĞĞ¹ÀÖµ
+	judgement = vector<vector<score_t>>(15, vector<score_t>(15, 0)); // åˆå§‹åŒ–åˆ¤æ–­
+	max_of_judgement = 0; // åˆå§‹åŒ–æœ€å¤§å€¼
+	auto spaces = fc.generate_possible_moves(); // è·å–æ‰€æœ‰çš„ç©ºæ ¼
+	for(auto &[x, y] : spaces) { // å¯¹æ¯ä¸€ä¸ªç©ºæ ¼çš„å¾—åˆ†è¿›è¡Œä¼°å€¼
 		for(int i = 0; i < 4; ++i) {
-			int dx = directions[i][0], dy = directions[i][1]; // ¼ÆËã·½Ïò
-			int leftcnt = 0, rightcnt = 0, lefthasblock = 0, righthasblock = 0; // ¼ÆËãÏàÁ¬Æå×ÓµÄ¸öÊıÒÔ¼°ÊÇ·ñ±»ÕÚµ²
-			char leftrecord = ' ', rightrecord = ' '; // ¼ÇÂ¼×óÓÒÁ½±ßµÄÆå×Ó
-			if(x + dx < 0 || y + dy < 0 || x + dx > 14 || y + dy > 14) { // Èç¹ûÔ½½ç£¬Ö±½ÓÈÏÎªÃ»ÓĞÏàÁ¬µÄÆå×Ó
+			int dx = directions[i][0], dy = directions[i][1]; // è®¡ç®—æ–¹å‘
+			int leftcnt = 0, rightcnt = 0, lefthasblock = 0, righthasblock = 0; // è®¡ç®—ç›¸è¿æ£‹å­çš„ä¸ªæ•°ä»¥åŠæ˜¯å¦è¢«é®æŒ¡
+			char leftrecord = ' ', rightrecord = ' '; // è®°å½•å·¦å³ä¸¤è¾¹çš„æ£‹å­
+			if(x + dx < 0 || y + dy < 0 || x + dx > 14 || y + dy > 14) { // å¦‚æœè¶Šç•Œï¼Œç›´æ¥è®¤ä¸ºæ²¡æœ‰ç›¸è¿çš„æ£‹å­
 				rightcnt = 0;
 				righthasblock = 1;
 			}
-			else if(fc.chessboard[x + dx][y + dy] == ' ') rightcnt = 0; // ÏàÁ¬µÄÒ»¸ñÊÇ¿ÕµÄ
+			else if(fc.chessboard[x + dx][y + dy] == ' ') rightcnt = 0; // ç›¸è¿çš„ä¸€æ ¼æ˜¯ç©ºçš„
 			else {
-				rightrecord = fc.chessboard[x + dx][y + dy]; // ¼ÇÂ¼ÏàÁ¬µÄÒ»¸ñ
-				for(int j = 1; j < 5; ++j) { // É¨4¸ñ
-					int nx = x + dx * j, ny = y + dy * j; // ¼ÆËãÆ«ÒÆÁ¿
-					if(nx >= 0 && nx <= 14 && ny >= 0 && ny <= 14) { // ±£Ö¤²»Ô½½ç
+				rightrecord = fc.chessboard[x + dx][y + dy]; // è®°å½•ç›¸è¿çš„ä¸€æ ¼
+				for(int j = 1; j < 5; ++j) { // æ‰«4æ ¼
+					int nx = x + dx * j, ny = y + dy * j; // è®¡ç®—åç§»é‡
+					if(nx >= 0 && nx <= 14 && ny >= 0 && ny <= 14) { // ä¿è¯ä¸è¶Šç•Œ
 						if(fc.chessboard[nx][ny] == rightrecord) {
-							rightcnt = j; // ÏàÍ¬£¬¼ÆÊı
+							rightcnt = j; // ç›¸åŒï¼Œè®¡æ•°
 						}
 						else if(fc.chessboard[nx][ny] != ' ') {
-							righthasblock = 1; // ²»ÏàÍ¬£¬ËµÃ÷·âÂ·
+							righthasblock = 1; // ä¸ç›¸åŒï¼Œè¯´æ˜å°è·¯
 							break;
 						}
-						else break; // ¿Õ£¬ÍË³ö
+						else break; // ç©ºï¼Œé€€å‡º
 					}
-					else { // Èç¹ûÔ½½ç£¬ÍâÃæÊÇÏÂ²»ÁËµÄ£¬ÈÏÎªÓĞ·âÂ·
+					else { // å¦‚æœè¶Šç•Œï¼Œå¤–é¢æ˜¯ä¸‹ä¸äº†çš„ï¼Œè®¤ä¸ºæœ‰å°è·¯
 						righthasblock = 1;
 						break;
 					}
 				}
 			}
-			// Í¬ÉÏÂß¼­
+			// åŒä¸Šé€»è¾‘
 			if(x - dx < 0 || y - dy < 0 || x - dx > 14 || y - dy > 14) {
 				leftcnt = 0;
 				lefthasblock = 1;
@@ -71,17 +72,17 @@ void Search_AI::judge(const Five_Chess &fc) noexcept {
 					}
 				}
 			}
-			// ¼ÆËã¸ÃµãµÄµÃ·Ö
-			// Èç¹ûÁ½±ßÏàµÈ£¬¶¼ÓĞ·âÂ·ÇÒ×ÜÊıĞ¡ÓÚ4£¬ÕâÀï²»¿ÉÄÜÁ¬³ÉÎå×ÓÁ¬Öé£¬Ö±½ÓÌø¹ı
+			// è®¡ç®—è¯¥ç‚¹çš„å¾—åˆ†
+			// å¦‚æœä¸¤è¾¹ç›¸ç­‰ï¼Œéƒ½æœ‰å°è·¯ä¸”æ€»æ•°å°äº4ï¼Œè¿™é‡Œä¸å¯èƒ½è¿æˆäº”å­è¿ç ï¼Œç›´æ¥è·³è¿‡
 			if((leftrecord == rightrecord) && lefthasblock && righthasblock && (leftcnt + rightcnt < 4)) {
 				continue;
 			}
-			// Èç¹ûÁ½±ßÓĞÒ»±ßÔ½½ç£¬ÇÒÁíÒ»±ßĞ¡ÓÚ4£¬ÕâÀï²»¿ÉÄÜÁ¬³ÉÎå×ÓÁ¬Öé£¬Ö±½ÓÌø¹ı
+			// å¦‚æœä¸¤è¾¹æœ‰ä¸€è¾¹è¶Šç•Œï¼Œä¸”å¦ä¸€è¾¹å°äº4ï¼Œè¿™é‡Œä¸å¯èƒ½è¿æˆäº”å­è¿ç ï¼Œç›´æ¥è·³è¿‡
 			else if((leftrecord == ' ') ^ (rightrecord == ' ') && (leftcnt < 4) && (rightcnt < 4) &&
 				lefthasblock && righthasblock) {
 				continue;
 			}
-			// Èç¹ûÁ½±ß¾ù²»Îª¿ÕÇÒ²»ÏàµÈ£¬ÇÒÃ¿Ò»±ß¾ùĞ¡ÓÚ4£¬ÕâÀï²»¿ÉÄÜÁ¬³ÉÎå×ÓÁ¬Öé£¬Ö±½ÓÌø¹ı
+			// å¦‚æœä¸¤è¾¹å‡ä¸ä¸ºç©ºä¸”ä¸ç›¸ç­‰ï¼Œä¸”æ¯ä¸€è¾¹å‡å°äº4ï¼Œè¿™é‡Œä¸å¯èƒ½è¿æˆäº”å­è¿ç ï¼Œç›´æ¥è·³è¿‡
 			else if((leftrecord != ' ') && (rightrecord != ' ') &&
 				(leftrecord != rightrecord) && (leftcnt < 4) && (rightcnt < 4)) {
 				continue;
@@ -92,28 +93,28 @@ void Search_AI::judge(const Five_Chess &fc) noexcept {
 					(righthasblock	? 0.1 : 1.)	* score_ref[rightcnt];
 			}
 		}
-		// ¸üĞÂ×î´óÖµ
+		// æ›´æ–°æœ€å¤§å€¼
 		max_of_judgement = max(max_of_judgement, judgement[x][y]);
 	}
 }
 
 Search_AI::score_t Search_AI::put(Five_Chess &fc, int depth) noexcept {
-	// ÏÈÅĞ¶Ï
+	// å…ˆåˆ¤æ–­
 	judge(fc);
-	// ±£´æ×î´óÖµµÄµã
+	// ä¿å­˜æœ€å¤§å€¼çš„ç‚¹
 	vector<pair<int, int>> maxs;
-	// µİ¹éµ½×îÉî´¦£¬Ö±½Ó·µ»Ø
+	// é€’å½’åˆ°æœ€æ·±å¤„ï¼Œç›´æ¥è¿”å›
 	if(depth >= maxdepth) {
 		return max_of_judgement;
 	}
-	// µ±×î´óÖµÎª0Ê±£¬ËµÃ÷ÓÎÏ·±ØÎªÆ½¾Ö
+	// å½“æœ€å¤§å€¼ä¸º0æ—¶ï¼Œè¯´æ˜æ¸¸æˆå¿…ä¸ºå¹³å±€
 	if(max_of_judgement == 0) {
 		auto [x, y] = fc.generate_possible_moves()[0];
 		fc.putchess(x, y);
 		return 0ULL;
 	}
 	else {
-		// »ñÈ¡·ÖÊı×î´óµÄËùÓĞµã
+		// è·å–åˆ†æ•°æœ€å¤§çš„æ‰€æœ‰ç‚¹
 		for(int i = 0; i < 15; ++i) {
 			for(int j = 0; j < 15; ++j) {
 				if(judgement[i][j] == max_of_judgement) {
@@ -121,14 +122,14 @@ Search_AI::score_t Search_AI::put(Five_Chess &fc, int depth) noexcept {
 				}
 			}
 		}
-		// Èç¹û×î´óµÄµãÖ»ÓĞÒ»¸ö£¬Ö±½Ó·µ»Ø
+		// å¦‚æœæœ€å¤§çš„ç‚¹åªæœ‰ä¸€ä¸ªï¼Œç›´æ¥è¿”å›
 		if(maxs.size() == 1) {
 			auto [i, j] = maxs[0];
 			fc.putchess(i, j);
-			// ÌØÅĞ£ºÓÎÏ·ÊÇ·ñ½áÊø
+			// ç‰¹åˆ¤ï¼šæ¸¸æˆæ˜¯å¦ç»“æŸ
 			char ch;
 			if(fc.has_ended(ch)) {
-				if(depth != 0) fc.rmchess(i, j); // Ö»ÓĞµ±Éî¶È²»Îª0Ê±²ÅĞèÒªÒÆ³ı¸ÃÆå×Ó
+				if(depth != 0) fc.rmchess(i, j); // åªæœ‰å½“æ·±åº¦ä¸ä¸º0æ—¶æ‰éœ€è¦ç§»é™¤è¯¥æ£‹å­
 				return static_cast<score_t>(-1);
 			}
 			judge(fc);
@@ -139,7 +140,7 @@ Search_AI::score_t Search_AI::put(Five_Chess &fc, int depth) noexcept {
 		}
 		int _x = -1, _y = -1;
 		unsigned long long maxn = 0;
-		// ¶ÔÓÚÃ¿Ò»¸ö×î´óµÄµã£¬µİ¹éËÑË÷ÔÚ¼ÌĞøÂä×ÓµÄÇé¿öÏÂ£¬¶ÔÓ¦µÄ×î´óµÄµã
+		// å¯¹äºæ¯ä¸€ä¸ªæœ€å¤§çš„ç‚¹ï¼Œé€’å½’æœç´¢åœ¨ç»§ç»­è½å­çš„æƒ…å†µä¸‹ï¼Œå¯¹åº”çš„æœ€å¤§çš„ç‚¹
 		for(auto [i, j] : maxs) {
 			fc.putchess(i, j);
 			char ch;
@@ -157,7 +158,7 @@ Search_AI::score_t Search_AI::put(Five_Chess &fc, int depth) noexcept {
 			}
 			fc.rmchess(i, j);
 		}
-		// Èç¹ûÉî¶ÈÎª0£¬ÔÚ×î´óµãÂä×Ó
+		// å¦‚æœæ·±åº¦ä¸º0ï¼Œåœ¨æœ€å¤§ç‚¹è½å­
 		if(depth == 0) {
 			fc.putchess(_x, _y);
 			return static_cast<score_t>(-1);
@@ -170,7 +171,7 @@ Search_AI::score_t Search_AI::put(Five_Chess &fc, int depth) noexcept {
 
 void Search_AI::put(Five_Chess &fc) noexcept {
 #ifdef _DEBUG
-	// ÔÚDEBUGÄ£Ê½ÏÂ´òÓ¡judgement
+	// åœ¨DEBUGæ¨¡å¼ä¸‹æ‰“å°judgement
 	for(int i = 0; i < 15; ++i) {
 		for(int j = 0; j < 15; ++j) {
 			cout << setw(16) << judgement[j][i] << "\t";
@@ -181,3 +182,4 @@ void Search_AI::put(Five_Chess &fc) noexcept {
 #endif
 	put(fc, 0);
 }
+#pragma warning(pop)
