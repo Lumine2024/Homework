@@ -13,18 +13,15 @@ add_executable(p05_encrypt_decrypt p05_encrypt_decrypt/main.c)
 add_executable(p06_hanoi p06_hanoi/main.c)
 
 add_executable(p07_maze p07_maze/main.c)
-# 由于使用了EasyX，以WinMain作为主函数（而不是main），故project8 push_boxes无法在cmake中启动
-# add_executable(p08_push_boxes 
-#    p08_push_boxes/main.cpp
-#    p08_push_boxes/Graphic_Logic.cpp
-#    p08_push_boxes/Graphic_Logic.h
-#    p08_push_boxes/Game_Logic.cpp
-#    p08_push_boxes/Game_Logic.h
-#    p08_push_boxes/Common.hpp
-# )
+
+# p08我单独创建一个sln文件以运行
 
 add_executable(p09_linked_list p09_linked_list/main.c)
 
 add_executable(p10_warehouse p10_warehouse/main.cpp)
 
-add_executable(Ex1_Queue Ex1_Queue/main.c)
+add_executable(Ex1_Queue Ex1_Nodes/queue.c)
+
+add_executable(Ex1_Stack Ex1_Nodes/stack.c)
+
+add_executable(Ex2_Calculator Ex2_Calculator/calculator.cpp)
