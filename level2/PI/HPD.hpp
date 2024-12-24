@@ -1,4 +1,5 @@
 #pragma once
+#include <algorithm>
 #include <string>
 #include <iostream>
 bool StrRefToNumGreater(const std::string a, const std::string b) noexcept {
@@ -19,7 +20,7 @@ bool StrRefToNumGreater(const std::string a, const std::string b) noexcept {
 	return false;//they are equal
 }
 void RevStr(std::string &str) {
-	reverse(str.begin(), str.end());
+	std::reverse(str.begin(), str.end());
 }
 std::string StrMinus(const std::string a, const std::string b) noexcept;
 std::string StrAdd(const std::string a, const std::string b) noexcept {

@@ -1,7 +1,7 @@
 #include <iostream>
 #include <vector>
 #include <set>
-#include <new>
+#include <algorithm>
 #include <ctime>
 using namespace std;
 //#define _DBG
@@ -213,8 +213,9 @@ int main() {
     time_t t1 = clock();
     cout << (lst.search(k) ? "true" : "false") << endl;
     time_t t2 = clock();
-    cout << (find(vec.begin(), vec.end(), k) != vec.end() ? "true" : "false") << endl;
+    cout << ((std::find(vec.begin(), vec.end(), k) != vec.end()) ? "true" : "false") << endl;
     time_t dt1 = t2 - t1, dt2 = clock() - t2;
 	cout << "dt1 = " << dt1 << "ms, dt2 = " << dt2 << "ms" << endl; // 唉，常数，dt1 = 2ms, dt2 = 1ms
+    // 喜报：在g++中，dt1=0ms，dt2=15ms，可喜可贺
     return 0;
 }
