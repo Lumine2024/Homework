@@ -176,84 +176,89 @@ class Search_AI : public Player_Base {
 public:
 	using score_t = unsigned long long;
 	Search_AI	(int md = 14) : maxdepth(md), max_of_judgement(0ULL) {}
-	void judge	(const Five_Chess &fc)	noexcept override;
-	void put	(Five_Chess &fc)		noexcept override;
-	// 递归的put函数，重写的put函数基于此函数实现
-	score_t put	(Five_Chess &fc, int depth) noexcept;
-	std::vector<std::vector<score_t>>	judgement; // 使用judgement数组存储每一个格子的估值
-	score_t					max_of_judgement; // 保存最大值，空间换时间
-	int						maxdepth; // 最大深度
+	void	judge	(const Five_Chess &fc)		noexcept override;
+	void	put	(Five_Chess &fc)		noexcept override;
+private:
+	score_t put	(Five_Chess &fc, int depth) noexcept;			// 递归的put函数，重写的put函数基于此函数实现
+	std::vector<std::vector<score_t>>	judgement;			// 使用judgement数组存储每一个格子的估值
+	score_t					max_of_judgement;		// 保存判断最大值，空间换时间
+	int					maxdepth;			// 最大深度
+	static constexpr score_t		inf = static_cast<score_t>(-1) >> 4; // 无穷，右移4避免溢出
+	static constexpr score_t		score_ref[5] = { 1ull, 1ull << 5, 1ULL << 12, 1ULL << 23, 1ULL << 40 }; // 棋盘类型对应的得分估值数组
 };
 // source_code/Search_AI.cpp
 Search_AI::score_t Search_AI::put(Five_Chess &fc, int depth) noexcept {
-	// 先判断
-	judge(fc);
-	// 保存最大值的点
-	vector<pair<int, int>> maxs;
-	// 递归到最深处，直接返回
-	if(depth >= maxdepth) {
-		return max_of_judgement;
-	}
-	// 当最大值为0时，说明游戏必为平局
-	if(max_of_judgement == 0) {
-		auto [x, y] = fc.generate_possible_moves()[0];
-		fc.putchess(x, y);
-		return 0ULL;
-	}
-	else {
-		// 获取分数最大的所有点
-		for(int i = 0; i < 15; ++i) {
-			for(int j = 0; j < 15; ++j) {
-				if(judgement[i][j] == max_of_judgement) {
-					maxs.emplace_back(i, j);
-				}
-			}
-		}
-		// 如果最大的点只有一个，直接返回
-		if(maxs.size() == 1) {
-			auto [i, j] = maxs[0];
-			fc.putchess(i, j);
-			// 特判：游戏是否结束
-			char ch;
-			if(fc.has_ended(ch)) {
-				if(depth != 0) fc.rmchess(i, j); // 只有当深度不为0时才需要移除该棋子
-				return static_cast<score_t>(-1);
-			}
-			judge(fc);
-			auto ret = max_of_judgement;
-			if(depth != 0) fc.rmchess(i, j);
-			else return static_cast<score_t>(-1);
-			return ret;
-		}
-		int _x = -1, _y = -1;
-		unsigned long long maxn = 0;
-		// 对于每一个最大的点，递归搜索在继续落子的情况下，对应的最大的点
-		for(auto [i, j] : maxs) {
-			fc.putchess(i, j);
-			char ch;
-			if(fc.has_ended(ch)) {
-				if(depth != 0) {
-					fc.rmchess(i, j);
-				}
-				return static_cast<score_t>(-1);
-			}
-			judge(fc);
-			auto retthis = put(fc, depth + 1);
-			if(maxn < retthis) {
-				maxn = retthis;
-				_x = i, _y = j;
-			}
-			fc.rmchess(i, j);
-		}
-		// 如果深度为0，在最大点落子
-		if(depth == 0) {
-			fc.putchess(_x, _y);
-			return static_cast<score_t>(-1);
-		}
-		else {
-			return maxn;
-		}
-	}
+    // 先判断
+    judge(fc);
+    // 保存最大值的点
+    vector<pair<int, int>> max_positions;
+    // 递归到最深处，直接返回
+    if(depth >= maxdepth) {
+        return max_of_judgement;
+    }
+    // 当最大值为0时，说明游戏必为平局
+    if(max_of_judgement == 0 && depth == 0) {
+        auto [x, y] = fc.generate_possible_moves()[0];
+        fc.putchess(x, y);
+        return 0ULL;
+    }
+    else {
+        // 获取分数最大的所有点
+        for(int row = 0; row < 15; ++row) {
+            for(int col = 0; col < 15; ++col) {
+                // 相对误差小于一定值
+                if((abs(static_cast<double>(judgement[row][col] - max_of_judgement))
+                    /   static_cast<double>(max_of_judgement)) < 0.03 &&
+                    judgement[row][col] != 0) {
+                    max_positions.emplace_back(row, col);
+                }
+            }
+        }
+        // 如果最大的点只有一个，直接返回
+        if(max_positions.size() == 1) {
+            auto [row, col] = max_positions[0];
+            fc.putchess(row, col);
+            // 特判：游戏是否结束
+            char winner;
+            if(fc.has_ended(winner)) {
+                if(depth != 0) fc.rmchess(row, col); // 只有当深度不为0时才需要移除该棋子
+                return  inf     * static_cast<double>((maxdepth - depth + 2) / maxdepth);
+            }
+            judge(fc);
+            auto score = max_of_judgement;
+            if(depth != 0) fc.rmchess(row, col);
+            else return static_cast<score_t>(-1);
+            return      score   * static_cast<double>((maxdepth - depth + 2) / maxdepth);
+        }
+        int best_row = -1, best_col = -1;
+        unsigned long long max_score = 0;
+        // 对于每一个最大的点，递归搜索在继续落子的情况下，对应的最大的点
+        for(auto [row, col] : max_positions) {
+            fc.putchess(row, col);
+            char winner;
+            if(fc.has_ended(winner)) {
+                if(depth != 0) {
+                    fc.rmchess(row, col);
+                }
+                return  inf     * static_cast<double>((maxdepth - depth + 2) / maxdepth);
+            }
+            judge(fc);
+            auto current_score = put(fc, depth + 1);
+            if(max_score < current_score) {
+                max_score = current_score;
+                best_row = row, best_col = col;
+            }
+            fc.rmchess(row, col);
+        }
+        // 如果深度为0，在最大点落子
+        if(depth == 0) {
+            fc.putchess(best_row, best_col);
+            return static_cast<score_t>(-1);
+        }
+        else {
+            return      max_score * static_cast<double>((maxdepth - depth + 2) / maxdepth);
+        }
+    }
 }
 ```
 ### 四、实验数据及结果分析：
