@@ -205,14 +205,12 @@ Search_AI::score_t Search_AI::put(Five_Chess &fc, int depth) noexcept {
     }
     else {
         // 获取分数最大的所有点
-        for(int row = 0; row < 15; ++row) {
-            for(int col = 0; col < 15; ++col) {
-                // 相对误差小于一定值
-                if((abs(static_cast<double>(judgement[row][col] - max_of_judgement))
-                    /   static_cast<double>(max_of_judgement)) < 0.03 &&
-                    judgement[row][col] != 0) {
-                    max_positions.emplace_back(row, col);
-                }
+        for(auto [row, col] : fc.generate_possible_moves()) {
+            // 相对误差小于一定值
+            if((abs(static_cast<double>(judgement[row][col] - max_of_judgement))
+                / static_cast<double>(max_of_judgement)) < 0.03 &&
+                judgement[row][col] != 0) {
+                max_positions.emplace_back(row, col);
             }
         }
         // 如果最大的点只有一个，直接返回
@@ -223,16 +221,16 @@ Search_AI::score_t Search_AI::put(Five_Chess &fc, int depth) noexcept {
             char winner;
             if(fc.has_ended(winner)) {
                 if(depth != 0) fc.rmchess(row, col); // 只有当深度不为0时才需要移除该棋子
-                return  inf     * static_cast<double>((maxdepth - depth + 2) / maxdepth);
+                return  inf * static_cast<double>((maxdepth - depth + 2)) / static_cast<double> (maxdepth);
             }
             judge(fc);
-            auto score = max_of_judgement;
+            score_t score = max_of_judgement;
             if(depth != 0) fc.rmchess(row, col);
             else return static_cast<score_t>(-1);
-            return      score   * static_cast<double>((maxdepth - depth + 2) / maxdepth);
+            return      score * static_cast<double>((maxdepth - depth + 2)) / static_cast<double>(maxdepth);
         }
         int best_row = -1, best_col = -1;
-        unsigned long long max_score = 0;
+        score_t max_score = 0ull;
         // 对于每一个最大的点，递归搜索在继续落子的情况下，对应的最大的点
         for(auto [row, col] : max_positions) {
             fc.putchess(row, col);
@@ -241,10 +239,10 @@ Search_AI::score_t Search_AI::put(Five_Chess &fc, int depth) noexcept {
                 if(depth != 0) {
                     fc.rmchess(row, col);
                 }
-                return  inf     * static_cast<double>((maxdepth - depth + 2) / maxdepth);
+                return  inf * static_cast<double>((maxdepth - depth + 2)) / static_cast<double>(maxdepth);
             }
             judge(fc);
-            auto current_score = put(fc, depth + 1);
+            score_t current_score = put(fc, depth + 1);
             if(max_score < current_score) {
                 max_score = current_score;
                 best_row = row, best_col = col;
@@ -257,7 +255,7 @@ Search_AI::score_t Search_AI::put(Five_Chess &fc, int depth) noexcept {
             return static_cast<score_t>(-1);
         }
         else {
-            return      max_score * static_cast<double>((maxdepth - depth + 2) / maxdepth);
+            return      max_score * static_cast<double>((maxdepth - depth + 2)) / static_cast<double>(maxdepth);
         }
     }
 }
