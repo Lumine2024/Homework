@@ -291,4 +291,4 @@ Search_AI::score_t Search_AI::put(Five_Chess &fc, int depth) noexcept {
 
 -----------
 
-![战五渣.jpg](真是个战五渣，电脑都打不过.jpg)
+![战五渣.jpg](真是个战五渣，电脑都打不过.png)
