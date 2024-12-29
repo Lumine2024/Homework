@@ -132,6 +132,7 @@
     <ClCompile Include="..\Project\source code\Game Logic.cpp" />
     <ClCompile Include="..\Project\source code\Graphics Logic.cpp" />
     <ClCompile Include="..\Project\source code\main.cpp" />
+    <ClCompile Include="..\Project\source code\Previous_search_ai.cpp" />
     <ClCompile Include="..\Project\source code\Search_AI.cpp" />
   </ItemGroup>
   <ItemGroup>

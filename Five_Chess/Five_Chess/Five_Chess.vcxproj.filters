@@ -27,6 +27,9 @@
     <ClCompile Include="..\Project\source code\Graphics Logic.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
+    <ClCompile Include="..\Project\source code\Previous_search_ai.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Project\source code\Player_base.h">
