@@ -112,6 +112,7 @@ RELEASE_INLINE int side() noexcept {
 > 再根据传入的Five_Chess类的内容填充相应的落子情况，
 > 随后根据最近一次的落子添加提示，最后根据鼠标信息提示点击在此处会落子的地点。
 ```cpp
+// source_code/Graphics Logic.cpp
 RELEASE_INLINE void printboard(const Five_Chess &game, const MOUSEMSG &msg) noexcept {
 	setbkcolor(Board_Background);
 	cleardevice();
