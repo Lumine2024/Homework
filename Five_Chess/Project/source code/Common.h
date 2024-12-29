@@ -23,12 +23,14 @@
 #pragma pop_macro("msvc")
 #pragma pop_macro("noinline")
 #pragma pop_macro("always_inline")
-#include <string>
 #ifdef _UNICODE
-	typedef wchar_t TCHAR;
+using TCHAR = wchar_t;
 #else
-	typedef char TCHAR;
+using TCHAR = char;
 #endif
 namespace std {
+template <class _Elem> struct char_traits;
+template <class _Ty> class allocator;
+template <class _Elem, class _Traits, class _Alloc> class basic_string;
 using tstring = std::basic_string<TCHAR, std::char_traits<TCHAR>, std::allocator<TCHAR>>;
 }
