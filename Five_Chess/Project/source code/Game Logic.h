@@ -20,7 +20,7 @@ public:
 		lastx(other.lastx), lasty(other.lasty),
 		prev_lastx(other.prev_lastx), prev_lasty(other.prev_lasty) {}
 	Five_Chess &operator=(const Five_Chess &other) {
-		if(this != &other) {
+		if(this != std::addressof(other)) {
 			chessboard = other.chessboard;
 			white_player_playing = other.white_player_playing;
 			lastx = other.lastx;
