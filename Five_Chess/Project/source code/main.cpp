@@ -29,16 +29,16 @@ int WINAPI WinMain(_In_ HINSTANCE hin, _In_opt_ HINSTANCE hp, _In_ LPSTR cmd, _I
 			} // case 1
 			case 2: { // AI自我对弈
 				// 为了给AI对决尽可能增加随机性，我们固定第一颗子放在中央，第二颗子随机放在中央的周围
-				Five_Chess		fc;
-				char			ch = ' ';
-				Search_AI		ai;
-				SYSTEMTIME		time; // 以当前的时间作为决定第二颗子的落子位置
+				Five_Chess	fc;
+				char		ch = ' ';
+				Search_AI	ai;
+				SYSTEMTIME	time; // 以当前的时间作为决定第二颗子的落子位置
 				GetLocalTime(&time);
 				fc.putchess(7, 7);
 				printboard(fc);
 				FlushBatchDraw();
-				int				_x = time.wMilliseconds % 3 - 1,
-								_y = (time.wMilliseconds / 3) % 3 - 1;
+				int			_x =  time.wMilliseconds		% 3 - 1,
+							_y = (time.wMilliseconds / 3)	% 3 - 1;
 				if(_x == 0 && _y == 0) ++_y; // 不能让两颗子重叠
 				Sleep(500);
 				fc.putchess(7 + _x, 7 + _y);

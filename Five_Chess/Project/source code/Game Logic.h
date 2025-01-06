@@ -63,8 +63,8 @@ class Human : public Player_Base {
 public:
 	Human() noexcept = default;
 	// 人类的判断可由人类自行完成，故提供空实现
-	RELEASE_INLINE void judge(const Five_Chess &fc) noexcept override {}
+	RELEASE_INLINE void judge	(const Five_Chess &fc)	noexcept override {}
 	// 获取鼠标信息，点击时落子
-	RELEASE_INLINE void put(Five_Chess &fc)			noexcept override;
+	RELEASE_INLINE void put		(Five_Chess &fc)		noexcept override;
 };
 #pragma warning(pop)

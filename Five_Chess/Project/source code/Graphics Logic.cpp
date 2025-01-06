@@ -149,7 +149,8 @@ private:
 	TCHAR text[100];
 };
 // 多个按钮，fn为需要执行的其他命令，如打印标题，返回被点击的按钮的下标
-template<class Function> int multibutton(const vector<Button> &buttons, Function fn) noexcept {
+template<class Function> int multibutton(
+	const vector<Button> &buttons, Function fn) noexcept {
 	MOUSEMSG msg;
 	while(true) {
 		msg = GetMouseMsg();
@@ -230,7 +231,7 @@ RELEASE_INLINE void options() noexcept {
 		int choice = multibutton(options_buttons, []() {
 			printmenu(340, 100, Options_texts[static_cast<size_t>(language)].c_str());
 		});
-		if(choice == 0) {
+		if(choice == 0) { // 是否更换音乐
 			music_playing = !music_playing;
 			if(music_playing) {
 				mciSendString(_T("play bgm repeat"), nullptr, 0, nullptr);
@@ -239,10 +240,10 @@ RELEASE_INLINE void options() noexcept {
 				mciSendString(_T("stop bgm"),		 nullptr, 0, nullptr);
 			}
 		}
-		else if(choice == 1) {
+		else if(choice == 1) { // 更换语言
 			language = static_cast<Language>((static_cast<int>(language) + 1) % 2);
 		}
-		else return;
+		else return; // 返回
 	}
 }
 

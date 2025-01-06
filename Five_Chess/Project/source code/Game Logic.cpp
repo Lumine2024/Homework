@@ -31,7 +31,7 @@ RELEASE_INLINE bool Five_Chess::has_ended(char &ch) const noexcept {
 	// 五子连珠，游戏结束
 	for(int i = 0; i < 15; ++i) {
 		for(int j = 0; j < 11; ++j) {
-			if(chessboard[i][j]			== chessboard[i][j + 1] &&
+			if(	chessboard[i][j]		== chessboard[i][j + 1] &&
 				chessboard[i][j + 1]	== chessboard[i][j + 2] &&
 				chessboard[i][j + 2]	== chessboard[i][j + 3] &&
 				chessboard[i][j + 3]	== chessboard[i][j + 4] &&
@@ -43,7 +43,7 @@ RELEASE_INLINE bool Five_Chess::has_ended(char &ch) const noexcept {
 	}
 	for(int i = 0; i < 15; ++i) {
 		for(int j = 0; j < 11; ++j) {
-			if(chessboard[j][i]			== chessboard[j + 1][i] &&
+			if(	chessboard[j][i]		== chessboard[j + 1][i] &&
 				chessboard[j + 1][i]	== chessboard[j + 2][i] &&
 				chessboard[j + 2][i]	== chessboard[j + 3][i] &&
 				chessboard[j + 3][i]	== chessboard[j + 4][i] &&
@@ -55,7 +55,7 @@ RELEASE_INLINE bool Five_Chess::has_ended(char &ch) const noexcept {
 	}
 	for(int i = 0; i < 11; ++i) {
 		for(int j = 0; j < 11; ++j) {
-			if(chessboard[i][j]				== chessboard[i + 1][j + 1] &&
+			if(	chessboard[i][j]			== chessboard[i + 1][j + 1] &&
 				chessboard[i + 1][j + 1]	== chessboard[i + 2][j + 2] &&
 				chessboard[i + 2][j + 2]	== chessboard[i + 3][j + 3] &&
 				chessboard[i + 3][j + 3]	== chessboard[i + 4][j + 4] &&
@@ -67,7 +67,7 @@ RELEASE_INLINE bool Five_Chess::has_ended(char &ch) const noexcept {
 	}
 	for(int i = 4; i < 15; ++i) {
 		for(int j = 0; j < 11; ++j) {
-			if(chessboard[i][j]				== chessboard[i - 1][j + 1] &&
+			if(	chessboard[i][j]			== chessboard[i - 1][j + 1] &&
 				chessboard[i - 1][j + 1]	== chessboard[i - 2][j + 2] &&
 				chessboard[i - 2][j + 2]	== chessboard[i - 3][j + 3] &&
 				chessboard[i - 3][j + 3]	== chessboard[i - 4][j + 4] &&

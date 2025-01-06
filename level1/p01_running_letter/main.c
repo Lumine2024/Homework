@@ -3,7 +3,7 @@
 #include<stdlib.h>
 #include<stdbool.h>
 
-int getConsoleWidthAAA(HANDLE* houtput,CONSOLE_SCREEN_BUFFER_INFO* binfo) {
+int getConsoleWidth(HANDLE* houtput,CONSOLE_SCREEN_BUFFER_INFO* binfo) {
 	*houtput = GetStdHandle(STD_OUTPUT_HANDLE);
 	GetConsoleScreenBufferInfo(*houtput, binfo);
 	int width = binfo->srWindow.Right - binfo->srWindow.Left;
@@ -19,7 +19,7 @@ int main() {
 	bool movingright = true;
 	while(1) {
 		system("cls");
-		int width = getConsoleWidthAAA(&a, &b);
+		int width = getConsoleWidth(&a, &b);
 		for(int i = 0; i < spaces; ++i) {
 			printf(" ");
 		}

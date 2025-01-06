@@ -24,9 +24,9 @@
 #pragma pop_macro("noinline")
 #pragma pop_macro("always_inline")
 #ifdef _UNICODE
-using TCHAR = wchar_t;
+	using TCHAR = wchar_t;
 #else
-using TCHAR = char;
+	using TCHAR = char;
 #endif
 namespace std {
 template <class _Elem> struct char_traits;
